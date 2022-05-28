@@ -59,6 +59,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sorters\ISortEngine.cs" />
     <Compile Include="Sorters\SortEngineBubble.cs" />
+    <Compile Include="Sorters\SortEngineCocktail.cs" />
+    <Compile Include="Sorters\SortEngineCount.cs" />
+    <Compile Include="Sorters\SortEngineHeap.cs" />
+    <Compile Include="Sorters\SortEngineInsertion.cs" />
+    <Compile Include="Sorters\SortEngineMerge.cs" />
+    <Compile Include="Sorters\SortEngineMoveToBack.cs" />
+    <Compile Include="Sorters\SortEngineQuick.cs" />
+    <Compile Include="Sorters\SortEngineSelection.cs" />
+    <Compile Include="Sorters\SortEngineShell.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
