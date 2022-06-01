@@ -15,6 +15,7 @@ namespace SortingVisualizer.Sorters
 
         Brush lineBrush = new SolidBrush(Color.Orange);
         Brush backBrush = new SolidBrush(Color.FromArgb(16, 16, 16));
+        private Brush movingBrush = new SolidBrush(Color.Green);
 
         public SortEngineCocktail(int[] array, Graphics g, int maxValue)
         {
@@ -23,9 +24,15 @@ namespace SortingVisualizer.Sorters
             _maxValue = maxValue;
         }
 
+        public void DrawBar(params int[] position)
+        {
+            _g.FillRectangle(backBrush, position[0], 0, 1, _maxValue);
+            _g.FillRectangle(lineBrush, position[0], _maxValue - _array[position[0]], 1, _maxValue);
+        }
+
         public bool IsSorted()
         {
-            for (int i = 0; i < _array.Length; i++)
+            for (int i = 0; i < _array.Length-1; i++)
             {
                 if (_array[i] > _array[i + 1]) return false;
             }
@@ -63,19 +70,8 @@ namespace SortingVisualizer.Sorters
             int temp = _array[i];
             _array[i] = _array[j];
             _array[j] = temp;
-
-            _g.FillRectangle(backBrush, i, 0, 1, _maxValue);
-            _g.FillRectangle(backBrush, j, 0, 1, _maxValue);
-            _g.FillRectangle(lineBrush, i, _maxValue - _array[i], 1, _maxValue);
-            _g.FillRectangle(lineBrush, j, _maxValue - _array[j], 1, _maxValue);
-        }
-
-        public void ReDraw()
-        {
-            for (int i = 0; i < _array.Length; i++)
-            {
-                _g.FillRectangle(lineBrush, i, _maxValue - _array[i], 1, _maxValue);
-            }
+            DrawBar(i);
+            DrawBar(j);
         }
     }
 }

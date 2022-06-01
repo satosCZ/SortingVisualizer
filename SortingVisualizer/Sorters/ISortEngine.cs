@@ -9,8 +9,8 @@ namespace SortingVisualizer.Sorters
     interface ISortEngine
     {
         void NextStep(bool slow = false);
-        bool IsSorted();
+        void DrawBar(params int [] position);
 
-        void ReDraw();
+        bool IsSorted();
     }
 }

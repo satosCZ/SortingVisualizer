@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SortingVisualizer.Sorters
 {
-    public class SortEngineSelection : ISortEngine
+    public class SortEngineGnome : ISortEngine
     {
         private bool doSlow = false;
 
@@ -18,7 +18,7 @@ namespace SortingVisualizer.Sorters
         private Brush lineBrush = new SolidBrush(Color.Orange);
         private Brush backBrush = new SolidBrush(Color.FromArgb(16, 16, 16));
 
-        public SortEngineSelection(int[] arr, Graphics g, int maxValue)
+        public SortEngineGnome(int[] arr, Graphics g, int maxValue)
         {
             _arr = arr;
             _g = g;
@@ -36,39 +36,31 @@ namespace SortingVisualizer.Sorters
 
         public void DrawBar(params int[] position)
         {
-            if (doSlow)
+            if (doSlow && position[0] % 4 == 0)
                 System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(1));
             _g.FillRectangle(backBrush, position[0], 0, 1, _maxValue);
             _g.FillRectangle(lineBrush, position[0], _maxValue - _arr[position[0]], 1, _maxValue);
         }
 
-        public void NextStep(bool slow = false)
+        public void NextStep(bool slow)
         {
             doSlow = slow;
-            for (int i = 0; i < _arr.Length - 1; i++)
+            for (int i = 1; i < _arr.Length;)
             {
-                int k = IntArrayMin(i);
-                int temp = _arr[i];
-                _arr[i] = _arr[k];
-                DrawBar(i);
-                _arr[k] = temp;
-                DrawBar(k);
-            }
-        }
-
-        private int IntArrayMin(int i)
-        {
-            int loc = i;
-            int voi = _arr[i];
-            for (int j = i; j < _arr.Length; j++)
-            {
-                if (_arr[j] < voi)
+                if (_arr[i - 1] <= _arr[i])
+                    ++i;
+                else
                 {
-                    loc = j;
-                    voi = _arr[j];
+                    int tmp = _arr[i];
+                    _arr[i] = _arr[i - 1];
+                    _arr[i - 1] = tmp;
+                    DrawBar(i);
+                    DrawBar(i - 1);
+                    --i;                    
+                    if (i == 0)
+                        i = 1;
                 }
             }
-            return loc;
         }
     }
 }

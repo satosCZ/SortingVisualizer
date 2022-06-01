@@ -78,10 +78,17 @@ namespace SortingVisualizer
             {
                 btnReset_Click(null, null);
             }
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            //lblTime.Text = stopwatch.Elapsed.ToString();
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            btnStartStop.Enabled = false;
             bw.RunWorkerAsync(argument: dcbSortMode.SelectedItem);
+
+            stopwatch.Stop();
+            lblTime.Text = stopwatch.Elapsed.ToString();
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -100,28 +107,36 @@ namespace SortingVisualizer
                 }
                 g = pbDisplay.CreateGraphics();
                 ShuffleArray(g);
+                lblSorted.Text = "0";
+                lblUnsorted.Text = array.Length.ToString();
                 btnStartStop.Enabled = true;
             }
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
+            
+            
             BackgroundWorker bgw = sender as BackgroundWorker;
             string SortEngineName = (string)e.Argument;
             Type type = Type.GetType("SortingVisualizer.Sorters." + SortEngineName);
             var ctors = type.GetConstructors();
             try
             {
-                ISortEngine se = (ISortEngine)ctors[0].Invoke(new object[] { array, g, pbDisplay.Height });
+                ISortEngine se = (ISortEngine)ctors[0].Invoke(new object[] { array, g, pbDisplay.Height});
                 while(!se.IsSorted() && (!bgw.CancellationPending))
                 {
-                    se.NextStep();
+                    se.NextStep(cbSlow.Checked);
                 }
                 SortCompleted();
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Source);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
+                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.StackTrace);
             }
         }
 
@@ -132,8 +147,10 @@ namespace SortingVisualizer
             for (int i = 0; i < array.Length; i++)
             {
                 g.FillRectangle(redBrush, i, pbDisplay.Height - array[i], 2, pbDisplay.Height);
-                System.Threading.Thread.Sleep(1);
+                if (i % 10 == 0)
+                    System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(1));
             }
+            
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -143,6 +160,12 @@ namespace SortingVisualizer
                 btnStartStop.Enabled = false;
                 PrepareArray(pbDisplay.CreateGraphics());
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            PrepareArray(pbDisplay.CreateGraphics());
+            btnReset.Text = "Shuffle";
         }
     }
 }

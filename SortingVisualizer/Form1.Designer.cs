@@ -38,14 +38,17 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnStartStop = new System.Windows.Forms.Button();
+            this.cbSlow = new System.Windows.Forms.CheckBox();
             this.dcbSortMode = new SortingVisualizer.Controls.DarkComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbDisplay)).BeginInit();
             this.SuspendLayout();
             // 
             // pbDisplay
             // 
+            this.pbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pbDisplay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(26)))), ((int)(((byte)(26)))));
-            this.pbDisplay.Dock = System.Windows.Forms.DockStyle.Right;
             this.pbDisplay.Location = new System.Drawing.Point(209, 0);
             this.pbDisplay.Name = "pbDisplay";
             this.pbDisplay.Size = new System.Drawing.Size(591, 361);
@@ -55,7 +58,7 @@
             // lblSorted
             // 
             this.lblSorted.AutoSize = true;
-            this.lblSorted.Location = new System.Drawing.Point(99, 108);
+            this.lblSorted.Location = new System.Drawing.Point(99, 138);
             this.lblSorted.Name = "lblSorted";
             this.lblSorted.Size = new System.Drawing.Size(0, 13);
             this.lblSorted.TabIndex = 1;
@@ -63,7 +66,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 108);
+            this.label4.Location = new System.Drawing.Point(3, 138);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 1;
@@ -72,7 +75,7 @@
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(96, 160);
+            this.lblTime.Location = new System.Drawing.Point(96, 190);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(0, 13);
             this.lblTime.TabIndex = 1;
@@ -80,7 +83,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 160);
+            this.label3.Location = new System.Drawing.Point(0, 190);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 13);
             this.label3.TabIndex = 1;
@@ -89,7 +92,7 @@
             // lblUnsorted
             // 
             this.lblUnsorted.AutoSize = true;
-            this.lblUnsorted.Location = new System.Drawing.Point(99, 86);
+            this.lblUnsorted.Location = new System.Drawing.Point(99, 116);
             this.lblUnsorted.Name = "lblUnsorted";
             this.lblUnsorted.Size = new System.Drawing.Size(0, 13);
             this.lblUnsorted.TabIndex = 1;
@@ -97,7 +100,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 86);
+            this.label2.Location = new System.Drawing.Point(3, 116);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 1;
@@ -139,6 +142,16 @@
             this.btnStartStop.UseVisualStyleBackColor = false;
             this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
+            // cbSlow
+            // 
+            this.cbSlow.AutoSize = true;
+            this.cbSlow.Location = new System.Drawing.Point(3, 68);
+            this.cbSlow.Name = "cbSlow";
+            this.cbSlow.Size = new System.Drawing.Size(56, 17);
+            this.cbSlow.TabIndex = 4;
+            this.cbSlow.Text = "Slowly";
+            this.cbSlow.UseVisualStyleBackColor = true;
+            // 
             // dcbSortMode
             // 
             this.dcbSortMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
@@ -164,6 +177,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
             this.ClientSize = new System.Drawing.Size(800, 361);
+            this.Controls.Add(this.cbSlow);
             this.Controls.Add(this.dcbSortMode);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
@@ -180,6 +194,7 @@
             this.MinimumSize = new System.Drawing.Size(800, 400);
             this.Name = "Form1";
             this.Text = "Sort Visualizer";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pbDisplay)).EndInit();
             this.ResumeLayout(false);
@@ -200,6 +215,7 @@
         private System.Windows.Forms.Label lblUnsorted;
         private System.Windows.Forms.Label label2;
         private Controls.DarkComboBox dcbSortMode;
+        private System.Windows.Forms.CheckBox cbSlow;
     }
 }
 

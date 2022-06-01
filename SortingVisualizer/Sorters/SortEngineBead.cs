@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SortingVisualizer.Sorters
 {
-    public class SortEngineSelection : ISortEngine
+    public class SortEngineBead : ISortEngine
     {
         private bool doSlow = false;
 
@@ -18,7 +18,7 @@ namespace SortingVisualizer.Sorters
         private Brush lineBrush = new SolidBrush(Color.Orange);
         private Brush backBrush = new SolidBrush(Color.FromArgb(16, 16, 16));
 
-        public SortEngineSelection(int[] arr, Graphics g, int maxValue)
+        public SortEngineBead(int[] arr, Graphics g, int maxValue)
         {
             _arr = arr;
             _g = g;
@@ -36,39 +36,51 @@ namespace SortingVisualizer.Sorters
 
         public void DrawBar(params int[] position)
         {
-            if (doSlow)
+            if (doSlow && position[0] % 4 == 0)
                 System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(1));
             _g.FillRectangle(backBrush, position[0], 0, 1, _maxValue);
             _g.FillRectangle(lineBrush, position[0], _maxValue - _arr[position[0]], 1, _maxValue);
         }
 
-        public void NextStep(bool slow = false)
+        public void NextStep(bool slow)
         {
             doSlow = slow;
-            for (int i = 0; i < _arr.Length - 1; i++)
-            {
-                int k = IntArrayMin(i);
-                int temp = _arr[i];
-                _arr[i] = _arr[k];
-                DrawBar(i);
-                _arr[k] = temp;
-                DrawBar(k);
-            }
-        }
+            int i, j, max, sum;
+            byte[] beads;
 
-        private int IntArrayMin(int i)
-        {
-            int loc = i;
-            int voi = _arr[i];
-            for (int j = i; j < _arr.Length; j++)
+            for (i = 1, max = _arr[0]; i < _arr.Length; ++i)
             {
-                if (_arr[j] < voi)
+                if (_arr[i] > max)
+                    max = _arr[i];
+            }
+
+            beads = new byte[max * _arr.Length];
+
+            for (i = 0; i < _arr.Length; ++i)
+            {
+                for (j = 0; j < _arr[i]; ++j)
                 {
-                    loc = j;
-                    voi = _arr[j];
+                    beads[i * max + j] = 1;
                 }
             }
-            return loc;
+
+            for (j = 0; j < max; ++j)
+            {
+                for (sum = i = 0; i < _arr.Length; ++i)
+                {
+                    sum += beads[i * max + j];
+                    beads[i * max + j] = 0;
+                }
+                for (i = _arr.Length - sum; i < _arr.Length; ++i)
+                    beads[i * max + j] = 1;
+            }
+
+            for (i = 0; i < _arr.Length; ++i)
+            {
+                for (j = 0; j < max && Convert.ToBoolean(beads[i * max + j]); ++j) ;
+                _arr[i] = j;
+                DrawBar(i);
+            }
         }
     }
 }
