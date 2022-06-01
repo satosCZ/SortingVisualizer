@@ -4,17 +4,21 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SortingVisualizer.Sorters
 {
     class SortEngineCount : ISortEngine
     {
+        private bool doSlow = false;
+
         private int[] _array;
         private int _maxValue;
         private Graphics _g;
 
         Brush lineBrush = new SolidBrush(Color.Orange);
         Brush backBrush = new SolidBrush(Color.FromArgb(16, 16, 16));
+        private Brush movingBrush = new SolidBrush(Color.Green);
 
         public SortEngineCount(int[] array, Graphics g, int maxValue)
         {
@@ -25,7 +29,7 @@ namespace SortingVisualizer.Sorters
 
         public bool IsSorted()
         {
-            for (int i = 0; i < _array.Length; i++)
+            for (int i = 0; i < _array.Length-1; i++)
             {
                 if (_array[i] > _array[i + 1]) return false;
             }
@@ -34,46 +38,46 @@ namespace SortingVisualizer.Sorters
 
         public void NextStep(bool slow = false)
         {
+            doSlow = slow;
+
             int[] sortedValues = new int[_array.Length];
 
-            int minVal = _array[0];
-            int maxVal = _array[0];
-            for (int i = 1; i < _array.Length; i++)
+            int[] counts = new int[_maxValue];
+
+            foreach (var item in _array)
             {
-                if (_array[i] < minVal) minVal = _array[i];
-                else if (_array[i] > maxVal) maxVal = _array[i];
+                counts[item]++;
             }
 
-            int[] counts = new int[maxVal - minVal + 1];
+
+            int numItemsBefore = 0;
+            for (int i = 0; i < counts.Length; i++)
+            {
+                int tmp = counts[i];
+                counts[i] = numItemsBefore;
+                numItemsBefore += tmp;
+            }
+
+            foreach (var item in _array)
+            {
+                sortedValues[counts[item]] = item;
+                DrawBar(counts[item], sortedValues[counts[item]]);
+                counts[item] += 1;
+            }
+
             for (int i = 0; i < _array.Length; i++)
             {
-                counts[_array[i] - minVal]++;
-            }
-            counts[0]--;
-            for (int i = 1; i < counts.Length; i++)
-            {
-                counts[i] = counts[i] + counts[i - 1];
-            }
+                _array[i] = sortedValues[i];
 
-            for (int i = _array.Length - 1; i >= 0; i--)
-            {
-                sortedValues[counts[_array[i] - minVal]--] = _array[i];
-                DrawBar(i, sortedValues[i]);
             }
         }
 
-        private void DrawBar(int i, int v)
+        public void DrawBar(params int[] i)
         {
-            _g.FillRectangle(backBrush, i, 0, 1, _maxValue);
-            _g.FillRectangle(lineBrush, i, _maxValue - v, 1, _maxValue);
-        }
-
-        public void ReDraw()
-        {
-            for (int i = 0; i < _array.Length; i++)
-            {
-                _g.FillRectangle(lineBrush, i, _maxValue - _array[i], 1, _maxValue);
-            }
+            if (doSlow)
+                System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(1));
+            _g.FillRectangle(backBrush, i[0], 0, 1, _maxValue);
+            _g.FillRectangle(lineBrush, i[0], _maxValue - i[1], 1, _maxValue);
         }
     }
 }

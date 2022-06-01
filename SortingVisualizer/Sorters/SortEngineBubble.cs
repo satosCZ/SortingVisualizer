@@ -14,6 +14,7 @@ namespace SortingVisualizer.Sorters
         private int _maxValue;
         Brush lineBrush = new SolidBrush(Color.Orange);
         Brush backBrush = new SolidBrush(Color.FromArgb(16, 16, 16));
+        private Brush movingBrush = new SolidBrush(Color.Green);
 
         public SortEngineBubble(int[] array, Graphics g, int maxValue)
         {
@@ -41,24 +42,19 @@ namespace SortingVisualizer.Sorters
             }
         }
 
-        public void ReDraw()
-        {
-            for (int i = 0; i < _array.Length - 1; i++)
-            {
-                _g.FillRectangle(lineBrush, i, _maxValue - _array[i], 1, _maxValue);
-            }
-            
-        }
-
         public void Swap(int i, int j)
         {
             int temp = _array[i];
             _array[i] = _array[j];
             _array[j] = temp;
-            _g.FillRectangle(backBrush, i, 0, 1, _maxValue);
-            _g.FillRectangle(backBrush, j, 0, 1, _maxValue);
-            _g.FillRectangle(lineBrush, i, _maxValue - _array[i], 1, _maxValue);
-            _g.FillRectangle(lineBrush, j, _maxValue - _array[j], 1, _maxValue);
+            DrawBar(i);
+            DrawBar(j);
+        }
+
+        public void DrawBar(params int[] position)
+        {
+            _g.FillRectangle(backBrush, position[0], 0, 1, _maxValue);
+            _g.FillRectangle(lineBrush, position[0], _maxValue - _array[position[0]], 1, _maxValue);
         }
     }
 }
